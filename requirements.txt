@@ -1,0 +1,9 @@
+streamlit
+scikit-learn
+pandas
+joblib
+plyer
+gTTS
+google-genai
+winrt-Windows.UI.Notifications.Management>=3.2.1,<4
+winrt-Windows.UI.Notifications>=3.2.1,<4

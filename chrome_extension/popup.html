@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScamShield</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header class="brand">
+      <img src="scamshield_icon.png" alt="" width="54" height="54">
+      <div>
+        <p class="eyebrow">MESSAGE SAFETY</p>
+        <h1>ScamShield</h1>
+      </div>
+    </header>
+
+    <section class="status-card" aria-labelledby="status-title">
+      <div class="status-heading">
+        <span class="status-dot" aria-hidden="true"></span>
+        <h2 id="status-title">Protection is on</h2>
+      </div>
+      <p>ScamShield checks website notifications in Chrome and stays quiet unless several warning signs appear together.</p>
+    </section>
+
+    <section id="alert" class="alert-card" aria-labelledby="alert-title" hidden>
+      <p class="eyebrow alert-eyebrow">PLEASE REVIEW</p>
+      <h2 id="alert-title">A notification looked suspicious</h2>
+      <p id="source" class="source"></p>
+      <ul id="reasons"></ul>
+      <p class="next-step">Do not click links or send money until you verify the request another way.</p>
+    </section>
+
+    <section id="empty-state" class="empty-card">
+      <h2>No alert to review</h2>
+      <p>If several warning signs appear in a Chrome website notification, ScamShield will show an alert here.</p>
+    </section>
+
+    <footer>
+      <p>Notification text stays on this device.</p>
+      <p class="limit">ScamShield can miss scams. A quiet result does not prove a message is safe.</p>
+      <p class="scope">Checks Chrome website notifications only.</p>
+    </footer>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
