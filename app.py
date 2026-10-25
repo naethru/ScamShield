@@ -14,6 +14,7 @@ st.set_page_config(
 )
 
 defaults = {
+    "theme": "light",
     "font_size": 22,
     "speech_speed": 0.9,
     "scanned_text": "",
@@ -49,6 +50,30 @@ st.caption(
     "Remove personal details before pasting. Never include passwords, "
     "sign-in codes, or account numbers."
 )
+
+with st.container(key="theme_panel"):
+    st.markdown("### Choose a display theme")
+    light_col, dark_col = st.columns(2, gap="small")
+
+    with light_col:
+        if st.button(
+            "Light theme",
+            type="primary" if st.session_state.theme == "light" else "secondary",
+            key="choose_light_theme",
+        ) and st.session_state.theme != "light":
+            st.session_state.theme = "light"
+            st.rerun()
+
+    with dark_col:
+        if st.button(
+            "Dark theme",
+            type="primary" if st.session_state.theme == "dark" else "secondary",
+            key="choose_dark_theme",
+        ) and st.session_state.theme != "dark":
+            st.session_state.theme = "dark"
+            st.rerun()
+
+    st.caption(f"Current theme: {st.session_state.theme.title()}")
 
 
 text_size_col, speech_speed_col = st.columns(2, gap="large")
@@ -114,30 +139,72 @@ with speech_speed_col:
         pace_display.markdown(f"Current pace: **{speed_label}**")
         st.caption("Adjust this before selecting the read-aloud button.")
 
+theme_palettes = {
+    "light": {
+        "color_scheme": "light",
+        "page": "#1A365D",
+        "sapphire": "#1A365D",
+        "workspace": "#F7FAFC",
+        "paper": "#FFFFFF",
+        "ink": "#102A43",
+        "muted": "#334E68",
+        "amber_wash": "#FFF4D6",
+        "line": "#9FB3C8",
+        "button": "#0A369D",
+        "button_hover": "#0B2F78",
+        "button_shadow": "#142B4C",
+        "disabled_background": "#E2E8F0",
+        "disabled_text": "#334E68",
+    },
+    "dark": {
+        "color_scheme": "dark",
+        "page": "#071423",
+        "sapphire": "#9BC2FF",
+        "workspace": "#101B2B",
+        "paper": "#182A40",
+        "ink": "#F7FAFC",
+        "muted": "#D0D8E2",
+        "amber_wash": "#3B321D",
+        "line": "#7188A3",
+        "button": "#2457A7",
+        "button_hover": "#326FC5",
+        "button_shadow": "#081525",
+        "disabled_background": "#30435A",
+        "disabled_text": "#E3EAF2",
+    },
+}
+theme_colors = theme_palettes[st.session_state.theme]
+
 st.html(
     f"""
     <style>
     :root {{
-        color-scheme: light;
-        --sapphire: #1A365D;
-        --sapphire-dark: #142B4C;
-        --workspace: #F7FAFC;
-        --paper: #FFFFFF;
-        --ink: #102A43;
-        --muted: #334E68;
+        color-scheme: {theme_colors['color_scheme']};
+        --page: {theme_colors['page']};
+        --sapphire: {theme_colors['sapphire']};
+        --workspace: {theme_colors['workspace']};
+        --paper: {theme_colors['paper']};
+        --ink: {theme_colors['ink']};
+        --muted: {theme_colors['muted']};
         --amber: #D69E2E;
-        --amber-wash: #FFF4D6;
-        --line: #9FB3C8;
+        --amber-wash: {theme_colors['amber_wash']};
+        --line: {theme_colors['line']};
+        --button: {theme_colors['button']};
+        --button-hover: {theme_colors['button_hover']};
+        --button-text: #FFFFFF;
+        --button-shadow: {theme_colors['button_shadow']};
+        --disabled-background: {theme_colors['disabled_background']};
+        --disabled-text: {theme_colors['disabled_text']};
     }}
 
     html, body, .stApp, [data-testid="stAppViewContainer"] {{
-        background: var(--sapphire) !important;
+        background: var(--page) !important;
         color: var(--ink) !important;
         font-family: Arial, sans-serif !important;
     }}
 
     [data-testid="stHeader"] {{
-        background: var(--sapphire) !important;
+        background: var(--page) !important;
     }}
 
     [data-testid="stMainBlockContainer"] {{
@@ -145,7 +212,7 @@ st.html(
         margin: 1.5rem auto 2.5rem;
         padding: 2.5rem !important;
         background: var(--workspace) !important;
-        border: 1px solid #D5E0EA;
+        border: 1px solid var(--line);
         border-radius: 24px;
         box-shadow: 0 16px 42px rgba(7, 22, 41, 0.24);
     }}
@@ -197,8 +264,8 @@ st.html(
         width: 100%;
         min-height: 3.5rem !important;
         padding: 0.7rem 1rem !important;
-        background: var(--sapphire) !important;
-        color: var(--workspace) !important;
+        background: var(--button) !important;
+        color: var(--button-text) !important;
         border: 2px solid var(--sapphire) !important;
         border-radius: 12px !important;
         font-size: {min(26, max(18, int(st.session_state.font_size * 0.9)))}px !important;
@@ -210,23 +277,23 @@ st.html(
     .stFormSubmitButton > button:hover,
     [data-testid="stFormSubmitButton"] button:hover,
     [data-testid="stBaseButton-primary"]:hover {{
-        background: var(--sapphire-dark) !important;
-        border-color: var(--sapphire-dark) !important;
-        color: var(--workspace) !important;
+        background: var(--button-hover) !important;
+        border-color: var(--button-hover) !important;
+        color: var(--button-text) !important;
         transform: translateY(-1px);
     }}
 
     .stButton > button *,
     .stFormSubmitButton > button *,
     [data-testid="stFormSubmitButton"] button *,
-    [data-testid="stBaseButton-primary"] * {{ color: var(--workspace) !important; }}
+    [data-testid="stBaseButton-primary"] * {{ color: var(--button-text) !important; }}
 
     button[data-testid="stBaseButton-primary"] {{
-        background: #0A369D !important;
-        color: #FFFFFF !important;
+        background: var(--button) !important;
+        color: var(--button-text) !important;
         -webkit-text-fill-color: #FFFFFF !important;
         border: 3px solid var(--sapphire) !important;
-        box-shadow: 0 3px 0 var(--sapphire-dark) !important;
+        box-shadow: 0 3px 0 var(--button-shadow) !important;
     }}
 
     button[data-testid="stBaseButton-primary"] *,
@@ -236,17 +303,17 @@ st.html(
     }}
 
     button[data-testid="stBaseButton-primary"]:hover {{
-        background: #0B2F78 !important;
+        background: var(--button-hover) !important;
         color: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
     }}
 
     .st-key-read_assessment_aloud button {{
-        background: #0A369D !important;
+        background: var(--button) !important;
         color: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
         border: 3px solid var(--sapphire) !important;
-        box-shadow: 0 3px 0 var(--sapphire-dark) !important;
+        box-shadow: 0 3px 0 var(--button-shadow) !important;
     }}
 
     .st-key-read_assessment_aloud button *,
@@ -256,20 +323,25 @@ st.html(
     }}
 
     .st-key-read_assessment_aloud button:hover {{
-        background: #0B2F78 !important;
+        background: var(--button-hover) !important;
         color: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
     }}
 
+    .st-key-choose_{st.session_state.theme}_theme button {{
+        border: 4px solid var(--amber) !important;
+    }}
+
     .stButton > button:disabled {{
-        background: #E2E8F0 !important;
-        color: var(--muted) !important;
-        border-color: #829AB1 !important;
+        background: var(--disabled-background) !important;
+        color: var(--disabled-text) !important;
+        border-color: var(--line) !important;
         cursor: not-allowed !important;
         transform: none !important;
     }}
-    .stButton > button:disabled * {{ color: var(--muted) !important; }}
+    .stButton > button:disabled * {{ color: var(--disabled-text) !important; }}
 
+    .st-key-theme_panel,
     .st-key-text_size_panel,
     .st-key-speech_speed_panel {{
         height: 100%;
@@ -279,19 +351,24 @@ st.html(
         border-radius: 16px;
     }}
 
+    .st-key-theme_panel h3,
     .st-key-text_size_panel h3,
     .st-key-speech_speed_panel h3 {{ font-size: 24px !important; }}
 
+    .st-key-theme_panel [data-testid="stMarkdownContainer"],
     .st-key-text_size_panel [data-testid="stMarkdownContainer"],
     .st-key-speech_speed_panel [data-testid="stMarkdownContainer"] {{
         font-size: 18px !important;
     }}
+    .st-key-theme_panel p,
     .st-key-text_size_panel p,
     .st-key-speech_speed_panel p {{ font-size: 18px !important; }}
 
+    .st-key-theme_panel .stButton > button,
     .st-key-text_size_panel .stButton > button,
     .st-key-speech_speed_panel .stButton > button {{ font-size: 17px !important; }}
 
+    .st-key-theme_panel [data-testid="stCaptionContainer"] *,
     .st-key-text_size_panel [data-testid="stCaptionContainer"] *,
     .st-key-speech_speed_panel [data-testid="stCaptionContainer"] * {{
         font-size: 16px !important;
@@ -373,7 +450,7 @@ st.html(
     }}
 
     a {{ color: var(--sapphire) !important; text-decoration: underline !important; }}
-    hr {{ border-color: #9FB3C8 !important; }}
+    hr {{ border-color: var(--line) !important; }}
 
     @media (max-width: 720px) {{
         [data-testid="stMainBlockContainer"] {{
@@ -465,8 +542,9 @@ if st.session_state.has_analyzed:
         "Ask ScamShield what a warning sign means or how to verify a request safely."
     )
     st.caption(
-        "When you ask Gemini, the message and your question are sent to Google "
-        "to prepare a response. Do not include passwords, sign-in codes, or account numbers."
+        "When you ask a question, the message, your question, and scan findings "
+        "are sent to Groq to prepare a response. "
+        "Do not include passwords, sign-in codes, or account numbers."
     )
 
     for index, message in enumerate(st.session_state.chat_history):
