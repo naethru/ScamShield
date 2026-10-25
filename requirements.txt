@@ -1,9 +1,9 @@
-streamlit
+streamlit>=1.47.0
 scikit-learn
 pandas
 joblib
 plyer
 gTTS
-google-genai
+groq
 winrt-Windows.UI.Notifications.Management>=3.2.1,<4
 winrt-Windows.UI.Notifications>=3.2.1,<4
